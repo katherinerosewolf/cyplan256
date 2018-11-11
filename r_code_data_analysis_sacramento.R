@@ -1,0 +1,6 @@
+getwd()
+census_data <- read.csv(file = "ACS_16_5YR_DP05.csv")
+View(census_data) 
+census_data$GEOID <- as.character(census_data$GEO.id2)
+census_data$GEOID <- paste0("0", census_data$GEOID)
+write.csv(census_data, file = "census_data_fixed.csv")
