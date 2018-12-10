@@ -73,6 +73,8 @@ working_sac_city_acs <-
 
 rm(working_county_acs)
 
+#### STOPPED HERE ####
+
 
 # median household inome (renaming)
 working$median_household_income_B19013 <- 
