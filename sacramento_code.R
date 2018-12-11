@@ -76,85 +76,171 @@ rm(working_county_acs)
 #### STOPPED HERE ####
 
 
-# median household inome (renaming)
-working$median_household_income_B19013 <- 
-  acs_constructed_variables$B19013e1
 
-# median household value (renaming)
-acs_constructed_variables$median_household_value_B25077 <- 
-  acs_constructed_variables$B25077e1
+#### variable naming ####
 
-# percent white (renaming)
-acs_constructed_variables$percent_white_B03002 <- 
-  acs_constructed_variables$B03002e3/
-  acs_constructed_variables$B03002e1
+# total for race purposes
+working_sac_city_acs$total_for_race_B02001e1 <- 
+  working_sac_city_acs$B02001e1
+working_sac_city_acs$total_for_race_margin_B02001m1 <- 
+  working_sac_city_acs$B02001m1
 
-# population density (people/km2, ALAND in m2)
-acs_constructed_variables$population_density_B01001_ALAND <- 
-  (1000000*
-     acs_constructed_variables$B01001e1/
-     acs_constructed_variables$ALAND)
+# white
+working_sac_city_acs$white_number_B02008e1 <- 
+  working_sac_city_acs$B02008e1
+working_sac_city_acs$white_margin_B02008m1 <- 
+  working_sac_city_acs$B02008e1
+working_sac_city_acs$white_percent <- 
+  working_sac_city_acs$number_white/
+  working_sac_city_acs$total_for_race_B02001e1
 
-# percent of population with high school education or more
-acs_constructed_variables$percent_high_school_plus_B15003 <- 
-  (
-    (
-      acs_constructed_variables$B15003e17 + 
-        acs_constructed_variables$B15003e18 + 
-        acs_constructed_variables$B15003e19 + 
-        acs_constructed_variables$B15003e20 + 
-        acs_constructed_variables$B15003e21 + 
-        acs_constructed_variables$B15003e22 + 
-        acs_constructed_variables$B15003e23 + 
-        acs_constructed_variables$B15003e24 + 
-        acs_constructed_variables$B15003e25
-    )
-    /acs_constructed_variables$B15003e1
-  )
+# nhopi
+working_sac_city_acs$nhopi_number_B02012e1 <-
+  working_sac_city_acs$B02012e1 
+working_sac_city_acs$nhopi_margin_B02012m1 <- 
+  working_sac_city_acs$B02012m1
+working_sac_city_acs$nhopi_percent <- 
+  working_sac_city_acs$nhopi_number_B02012e1/
+  working_sac_city_acs$total_for_race_B02001e1
+  
+# native american alaska native
+working_sac_city_acs$aian_number_B02010e1 <-
+  working_sac_city_acs$B02010e1 
+working_sac_city_acs$aian_margin_B02010m1 <- 
+  working_sac_city_acs$B02010m1
+working_sac_city_acs$aian_percent <- 
+  working_sac_city_acs$aian_number_B02010e1/
+  working_sac_city_acs$total_for_race_B02001e1
 
-# median age
-acs_constructed_variables$median_age_B01002 <- 
-  acs_constructed_variables$B01002e1
+# asian
+working_sac_city_acs$asian_number_B02011e1 <-
+  working_sac_city_acs$B02011e1 
+working_sac_city_acs$asian_margin_B02011m1 <- 
+  working_sac_city_acs$B02011m1
+working_sac_city_acs$asian_percent <- 
+  working_sac_city_acs$asian_number_B02011e1/
+  working_sac_city_acs$total_for_race_B02001e1
 
+# african american
+working_sac_city_acs$black_number_B02009e1 <-
+  working_sac_city_acs$B02009e1 
+working_sac_city_acs$black_margin_B02009m1 <- 
+  working_sac_city_acs$B02009m1
+working_sac_city_acs$black_percent <- 
+  working_sac_city_acs$black_number_B02009e1/
+  working_sac_city_acs$total_for_race_B02001e1
 
-# income
-median_household_income
+# hispanic/latinx
+working_sac_city_acs$total_for_ethnicity_B03003e1 <- 
+  working_sac_city_acs$B03003e1
+working_sac_city_acs$margin_for_ethnicity_B03003m1 <- 
+  working_sac_city_acs$B03003m1
 
-# Native American etc.
-total_for_black <-
-number_black <-
-percent_black <-
+working_sac_city_acs$hisp_lat_number_B03003e3 <-
+  working_sac_city_acs$B03003e3 
+working_sac_city_acs$hisp_lat_margin_B03003m3 <-
+  working_sac_city_acs$B03003m3
 
-# Asian
-percent_hispanic_latinx <-
+working_sac_city_acs$not_hisp_lat_number_B03003e2 <-
+  working_sac_city_acs$B03003e2 
+working_sac_city_acs$not_hisp_lat_margin_B03003m2 <-
+  working_sac_city_acs$B03003m2
 
-# Black African American
-total_for_black <-
-number_black <-
-percent_black <-
-
-# Hispanic/Latinx
-total_for_hispanic_latinx <-
-number_hispanic_latinx <-
-percent_hispanic_latinx <-
+working_sac_city_acs$hisp_lat_percent_B03003 <- 
+  working_sac_city_acs$hisp_lat_number_B03003e3/
+  working_sac_city_acs$total_for_ethnicity_B03003e1
 
 # % below poverty
-total_for_poverty <-
-number_above_poverty <-
-number_below_poverty <-
-percent_below_poverty <- 
+working_sac_city_acs$poverty_total_B17001e1 <- 
+  working_sac_city_acs$B17001e1
+working_sac_city_acs$poverty_total_margin_B17001m1 <- 
+  working_sac_city_acs$B17001m1
+
+working_sac_city_acs$poverty_below_number_B17001e2 <- 
+  working_sac_city_acs$B17001e2
+working_sac_city_acs$poverty_below_margin_B17001m2 <- 
+  working_sac_city_acs$B17001m2
+
+working_sac_city_acs$poverty_above_number_B17001e31 <- 
+  working_sac_city_acs$B17001e31
+working_sac_city_acs$poverty_above_margin_B17001m31 <- 
+  working_sac_city_acs$B17001m31
+
+working_sac_city_acs$poverty_below_percent_B17001 <- 
+  working_sac_city_acs$poverty_below_number_B17001e2/
+  working_sac_city_acs$poverty_total_B17001e1
 
 # educational attainment
-total_for_education <-
-number_completed_high_school <-
-percent_completed_high_school <-
+working_sac_city_acs$education_total_B15003e1 <- 
+  working_sac_city_acs$B15003e1
+working_sac_city_acs$education_total_margin_B15003m1 <- 
+  working_sac_city_acs$B15003m1
+
+working_sac_city_acs$completed_high_school_number_B15003e18_25 <- 
+  (
+    (
+      working_sac_city_acs$B15003e17 + 
+        working_sac_city_acs$B15003e18 + 
+        working_sac_city_acs$B15003e19 + 
+        working_sac_city_acs$B15003e20 + 
+        working_sac_city_acs$B15003e21 + 
+        working_sac_city_acs$B15003e22 + 
+        working_sac_city_acs$B15003e23 + 
+        working_sac_city_acs$B15003e24 + 
+        working_sac_city_acs$B15003e25
+    )
+    /working_sac_city_acs$B15003e1
+  )
+working_sac_city_acs$did_not_complete_high_school_number <-
+working_sac_city_acs$completed_high_school_percent_B15003 <- 
+
+  
+# median age
+working_sac_city_acs$median_age_B01002 <- 
+  working_sac_city_acs$B01002e1
+  
+# linguistic isolation
+working_sac_city_acs$total_for_ling_iso <-
+working_sac_city_acs$ling_iso_number <-
+working_sac_city_acs$ling_non_iso_number <-
+working_sac_city_acs$ling_iso_percent <-
+
+# housing tenure
+working_sac_city_acs$total_for_housing_tenure <-
+working_sac_city_acs$renter_occupy_number <-
+working_sac_city_acs$owner_occupy_number <-
+working_sac_city_acs$renter_occupy_percent <-
 
 # population density
-total_for_population_density <-
-area_for_population_density <-
-population_density <-
+working_sac_city_acs$population_density_B01001_ALAND <- 
+  (1000000*
+     working_sac_city_acs$B02001e1/
+     working_sac_city_acs$ALAND)
+
+# median household income
+working_sac_city_acs$median_household_income_B19013 <- 
+  working_sac_city_acs$B19013e1
+
+# age below 5
+working_sac_city_acs$total_for_age <-
+working_sac_city_acs$age_below_5_number <-
+working_sac_city_acs$age_over_5_number <-
+
+# unemployment rate
+working_sac_city_acs$total_for_employment_16_plus_S2301e1 <- 
+  working_sac_city_acs$S2301e1
+working_sac_city_acs$total_for_employment_16_plus_S2301m1 <- 
+  working_sac_city_acs$S2301m1
+working_sac_city_acs$unemployment_rate_S2301e4 <- 
+  working_sac_city_acs$S2301e4
+working_sac_city_acs$unemployment_rate_margin_S2301m4 <- 
+  working_sac_city_acs$S2301m4
+
+# median household value
+working_sac_city_acs$median_household_value_B25077 <- 
+  working_sac_city_acs$B25077e1
 
 
 
+#### correlation analysis ####
 
-# 
