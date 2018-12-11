@@ -12,3 +12,5 @@ ACS_2016_5YR_TRACT_06_CALIFORNIA.gdb/
 ACS_2016_5YR_TRACT_06_CALIFORNIA/
 .sr.lock
 *lock
+scary nlcd data/
+.pkinfo
