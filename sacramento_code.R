@@ -17,6 +17,8 @@ library(dplyr)
 library(psych)
 library(tcltk2)
 library(bit64)
+library(scales)
+library(forcats)
 
 
 
@@ -75,274 +77,514 @@ rm(working_county_acs)
 
 
 
+#### import trees per tract, NLCD data, and life expectancy data
+raw_outcome_data <- 
+  fread("city_trees_per_tract.txt", 
+        colClasses = 
+          list(character = 'GEOID'))
+
+working_outcome_data <- 
+  raw_outcome_data
+
+
+
+#### join to the rest of the data ####
+data_for_analysis <- 
+  merge(x = working_sac_city_acs, 
+        y = working_outcome_data, 
+        by = "GEOID", 
+        all = TRUE)
+
+
+
 #### variable naming ####
 
 # total population
-working_sac_city_acs$total_population_B01001e1 <- 
-  working_sac_city_acs$B01001e1
+data_for_analysis$total_population_B01001e1 <- 
+  data_for_analysis$B01001e1
 
 # population density
-working_sac_city_acs$population_density_B01001_ALAND <- 
+data_for_analysis$population_density_B01001_ALAND <- 
   (1000000*
-     working_sac_city_acs$total_population_B01001e1/
-     working_sac_city_acs$ALAND)
+     data_for_analysis$total_population_B01001e1/
+     data_for_analysis$ALAND)
 
 # total for race purposes
-working_sac_city_acs$total_for_race_B02001e1 <- 
-  working_sac_city_acs$B02001e1
-working_sac_city_acs$total_for_race_margin_B02001m1 <- 
-  working_sac_city_acs$B02001m1
+data_for_analysis$total_for_race_B02001e1 <- 
+  data_for_analysis$B02001e1
+data_for_analysis$total_for_race_margin_B02001m1 <- 
+  data_for_analysis$B02001m1
 
 # white
-working_sac_city_acs$white_number_B02008e1 <- 
-  working_sac_city_acs$B02008e1
-working_sac_city_acs$white_margin_B02008m1 <- 
-  working_sac_city_acs$B02008e1
-working_sac_city_acs$white_percent <- 
-  working_sac_city_acs$number_white/
-  working_sac_city_acs$total_for_race_B02001e1
+data_for_analysis$white_number_B02008e1 <- 
+  data_for_analysis$B02008e1
+data_for_analysis$white_margin_B02008m1 <- 
+  data_for_analysis$B02008e1
+data_for_analysis$white_percent <- 
+  data_for_analysis$number_white/
+  data_for_analysis$total_for_race_B02001e1
 
 # nhopi
-working_sac_city_acs$nhopi_number_B02012e1 <-
-  working_sac_city_acs$B02012e1 
-working_sac_city_acs$nhopi_margin_B02012m1 <- 
-  working_sac_city_acs$B02012m1
-working_sac_city_acs$nhopi_percent <- 
-  working_sac_city_acs$nhopi_number_B02012e1/
-  working_sac_city_acs$total_for_race_B02001e1
+data_for_analysis$nhopi_number_B02012e1 <-
+  data_for_analysis$B02012e1 
+data_for_analysis$nhopi_margin_B02012m1 <- 
+  data_for_analysis$B02012m1
+data_for_analysis$nhopi_percent <- 
+  data_for_analysis$nhopi_number_B02012e1/
+  data_for_analysis$total_for_race_B02001e1
   
 # native american alaska native
-working_sac_city_acs$aian_number_B02010e1 <-
-  working_sac_city_acs$B02010e1 
-working_sac_city_acs$aian_margin_B02010m1 <- 
-  working_sac_city_acs$B02010m1
-working_sac_city_acs$aian_percent <- 
-  working_sac_city_acs$aian_number_B02010e1/
-  working_sac_city_acs$total_for_race_B02001e1
+data_for_analysis$aian_number_B02010e1 <-
+  data_for_analysis$B02010e1 
+data_for_analysis$aian_margin_B02010m1 <- 
+  data_for_analysis$B02010m1
+data_for_analysis$aian_percent <- 
+  data_for_analysis$aian_number_B02010e1/
+  data_for_analysis$total_for_race_B02001e1
 
 # asian
-working_sac_city_acs$asian_number_B02011e1 <-
-  working_sac_city_acs$B02011e1 
-working_sac_city_acs$asian_margin_B02011m1 <- 
-  working_sac_city_acs$B02011m1
-working_sac_city_acs$asian_percent <- 
-  working_sac_city_acs$asian_number_B02011e1/
-  working_sac_city_acs$total_for_race_B02001e1
+data_for_analysis$asian_number_B02011e1 <-
+  data_for_analysis$B02011e1 
+data_for_analysis$asian_margin_B02011m1 <- 
+  data_for_analysis$B02011m1
+data_for_analysis$asian_percent <- 
+  data_for_analysis$asian_number_B02011e1/
+  data_for_analysis$total_for_race_B02001e1
 
 # african american
-working_sac_city_acs$black_number_B02009e1 <-
-  working_sac_city_acs$B02009e1 
-working_sac_city_acs$black_margin_B02009m1 <- 
-  working_sac_city_acs$B02009m1
-working_sac_city_acs$black_percent <- 
-  working_sac_city_acs$black_number_B02009e1/
-  working_sac_city_acs$total_for_race_B02001e1
+data_for_analysis$black_number_B02009e1 <-
+  data_for_analysis$B02009e1 
+data_for_analysis$black_margin_B02009m1 <- 
+  data_for_analysis$B02009m1
+data_for_analysis$black_percent <- 
+  data_for_analysis$black_number_B02009e1/
+  data_for_analysis$total_for_race_B02001e1
 
 # hispanic/latinx
-working_sac_city_acs$total_for_ethnicity_B03003e1 <- 
-  working_sac_city_acs$B03003e1
-working_sac_city_acs$margin_for_ethnicity_B03003m1 <- 
-  working_sac_city_acs$B03003m1
+data_for_analysis$total_for_ethnicity_B03003e1 <- 
+  data_for_analysis$B03003e1
+data_for_analysis$margin_for_ethnicity_B03003m1 <- 
+  data_for_analysis$B03003m1
 
-working_sac_city_acs$hisp_lat_number_B03003e3 <-
-  working_sac_city_acs$B03003e3 
-working_sac_city_acs$hisp_lat_margin_B03003m3 <-
-  working_sac_city_acs$B03003m3
+data_for_analysis$hisp_lat_number_B03003e3 <-
+  data_for_analysis$B03003e3 
+data_for_analysis$hisp_lat_margin_B03003m3 <-
+  data_for_analysis$B03003m3
 
-working_sac_city_acs$not_hisp_lat_number_B03003e2 <-
-  working_sac_city_acs$B03003e2 
-working_sac_city_acs$not_hisp_lat_margin_B03003m2 <-
-  working_sac_city_acs$B03003m2
+data_for_analysis$not_hisp_lat_number_B03003e2 <-
+  data_for_analysis$B03003e2 
+data_for_analysis$not_hisp_lat_margin_B03003m2 <-
+  data_for_analysis$B03003m2
 
-working_sac_city_acs$hisp_lat_percent_B03003 <- 
-  working_sac_city_acs$hisp_lat_number_B03003e3/
-  working_sac_city_acs$total_for_ethnicity_B03003e1
+data_for_analysis$hisp_lat_percent_B03003 <- 
+  data_for_analysis$hisp_lat_number_B03003e3/
+  data_for_analysis$total_for_ethnicity_B03003e1
 
 # % below poverty
-working_sac_city_acs$poverty_total_B17001e1 <- 
-  working_sac_city_acs$B17001e1
-working_sac_city_acs$poverty_total_margin_B17001m1 <- 
-  working_sac_city_acs$B17001m1
+data_for_analysis$poverty_total_B17001e1 <- 
+  data_for_analysis$B17001e1
+data_for_analysis$poverty_total_margin_B17001m1 <- 
+  data_for_analysis$B17001m1
 
-working_sac_city_acs$poverty_below_number_B17001e2 <- 
-  working_sac_city_acs$B17001e2
-working_sac_city_acs$poverty_below_margin_B17001m2 <- 
-  working_sac_city_acs$B17001m2
+data_for_analysis$poverty_below_number_B17001e2 <- 
+  data_for_analysis$B17001e2
+data_for_analysis$poverty_below_margin_B17001m2 <- 
+  data_for_analysis$B17001m2
 
-working_sac_city_acs$poverty_above_number_B17001e31 <- 
-  working_sac_city_acs$B17001e31
-working_sac_city_acs$poverty_above_margin_B17001m31 <- 
-  working_sac_city_acs$B17001m31
+data_for_analysis$poverty_above_number_B17001e31 <- 
+  data_for_analysis$B17001e31
+data_for_analysis$poverty_above_margin_B17001m31 <- 
+  data_for_analysis$B17001m31
 
-working_sac_city_acs$poverty_below_percent_B17001 <- 
-  working_sac_city_acs$poverty_below_number_B17001e2/
-  working_sac_city_acs$poverty_total_B17001e1
+data_for_analysis$poverty_below_percent_B17001 <- 
+  data_for_analysis$poverty_below_number_B17001e2/
+  data_for_analysis$poverty_total_B17001e1
 
 # unemployment rate
-working_sac_city_acs$employment_16_plus_total_S2301e1 <- 
-  working_sac_city_acs$S2301e1
-working_sac_city_acs$employment_16_plus_margin_S2301m1 <- 
-  working_sac_city_acs$S2301m1
-working_sac_city_acs$unemployment_rate_S2301e4 <- 
-  working_sac_city_acs$S2301e4
-working_sac_city_acs$unemployment_rate_margin_S2301m4 <- 
-  working_sac_city_acs$S2301m4
+data_for_analysis$employment_16_plus_total_S2301e1 <- 
+  data_for_analysis$S2301e1
+data_for_analysis$employment_16_plus_margin_S2301m1 <- 
+  data_for_analysis$S2301m1
+data_for_analysis$unemployment_rate_S2301e4 <- 
+  data_for_analysis$S2301e4
+data_for_analysis$unemployment_rate_margin_S2301m4 <- 
+  data_for_analysis$S2301m4
 
 # educational attainment
-working_sac_city_acs$education_total_B15003e1 <- 
-  working_sac_city_acs$B15003e1
-working_sac_city_acs$education_total_margin_B15003m1 <- 
-  working_sac_city_acs$B15003m1
+data_for_analysis$education_total_B15003e1 <- 
+  data_for_analysis$B15003e1
+data_for_analysis$education_total_margin_B15003m1 <- 
+  data_for_analysis$B15003m1
 
-working_sac_city_acs$completed_high_school_number_B15003e17_25 <- 
-  (working_sac_city_acs$B15003e17 + 
-     working_sac_city_acs$B15003e18 + 
-     working_sac_city_acs$B15003e19 + 
-     working_sac_city_acs$B15003e20 + 
-     working_sac_city_acs$B15003e21 + 
-     working_sac_city_acs$B15003e22 + 
-     working_sac_city_acs$B15003e23 + 
-     working_sac_city_acs$B15003e24 + 
-     working_sac_city_acs$B15003e25)
+data_for_analysis$completed_high_school_number_B15003e17_25 <- 
+  (data_for_analysis$B15003e17 + 
+     data_for_analysis$B15003e18 + 
+     data_for_analysis$B15003e19 + 
+     data_for_analysis$B15003e20 + 
+     data_for_analysis$B15003e21 + 
+     data_for_analysis$B15003e22 + 
+     data_for_analysis$B15003e23 + 
+     data_for_analysis$B15003e24 + 
+     data_for_analysis$B15003e25)
 
-working_sac_city_acs$did_not_complete_high_school_number_B15003e2_16 <- 
-  (working_sac_city_acs$B15003e2 + 
-     working_sac_city_acs$B15003e3 + 
-     working_sac_city_acs$B15003e4 + 
-     working_sac_city_acs$B15003e5 + 
-     working_sac_city_acs$B15003e6 + 
-     working_sac_city_acs$B15003e7 + 
-     working_sac_city_acs$B15003e8 + 
-     working_sac_city_acs$B15003e9 + 
-     working_sac_city_acs$B15003e10 + 
-     working_sac_city_acs$B15003e11 + 
-     working_sac_city_acs$B15003e12 + 
-     working_sac_city_acs$B15003e13 + 
-     working_sac_city_acs$B15003e14 + 
-     working_sac_city_acs$B15003e15 + 
-     working_sac_city_acs$B15003e16) # figure out margins later
+data_for_analysis$did_not_complete_high_school_number_B15003e2_16 <- 
+  (data_for_analysis$B15003e2 + 
+     data_for_analysis$B15003e3 + 
+     data_for_analysis$B15003e4 + 
+     data_for_analysis$B15003e5 + 
+     data_for_analysis$B15003e6 + 
+     data_for_analysis$B15003e7 + 
+     data_for_analysis$B15003e8 + 
+     data_for_analysis$B15003e9 + 
+     data_for_analysis$B15003e10 + 
+     data_for_analysis$B15003e11 + 
+     data_for_analysis$B15003e12 + 
+     data_for_analysis$B15003e13 + 
+     data_for_analysis$B15003e14 + 
+     data_for_analysis$B15003e15 + 
+     data_for_analysis$B15003e16) # figure out margins later
 
-working_sac_city_acs$completed_high_school_percent_B15003 <- 
-  working_sac_city_acs$completed_high_school_number_B15003e17_25/
-  working_sac_city_acs$B15003e1
+data_for_analysis$completed_high_school_percent_B15003 <- 
+  data_for_analysis$completed_high_school_number_B15003e17_25/
+  data_for_analysis$B15003e1
 
 # median age
-working_sac_city_acs$median_age_B01002e2 <- 
-  working_sac_city_acs$B01002e2
-working_sac_city_acs$median_age_margin_B01002m2 <- 
-  working_sac_city_acs$B01002m2
+data_for_analysis$median_age_B01002e2 <- 
+  data_for_analysis$B01002e2
+data_for_analysis$median_age_margin_B01002m2 <- 
+  data_for_analysis$B01002m2
   
 # linguistic isolation
-working_sac_city_acs$ling_iso_total_households_S1602e1 <- 
-  working_sac_city_acs$S1602e1
-working_sac_city_acs$ling_iso_total_households_S1602m1 <- 
-  working_sac_city_acs$S1602m1
+data_for_analysis$ling_iso_total_households_S1602e1 <- 
+  data_for_analysis$S1602e1
+data_for_analysis$ling_iso_total_households_S1602m1 <- 
+  data_for_analysis$S1602m1
 
-working_sac_city_acs$ling_iso_number_S1602e3 <- 
-  working_sac_city_acs$S1602e3
-working_sac_city_acs$ling_iso_number_margin_S1602m3 <- 
-  working_sac_city_acs$S1602m3
+data_for_analysis$ling_iso_number_S1602e3 <- 
+  data_for_analysis$S1602e3
+data_for_analysis$ling_iso_number_margin_S1602m3 <- 
+  data_for_analysis$S1602m3
 
-working_sac_city_acs$ling_iso_percent_S1602e4 <- 
-  working_sac_city_acs$S1602e4
-working_sac_city_acs$ling_iso_percent_margin_S1602m4 <- 
-  working_sac_city_acs$S1602m4
+data_for_analysis$ling_iso_percent_S1602e4 <- 
+  data_for_analysis$S1602e4
+data_for_analysis$ling_iso_percent_margin_S1602m4 <- 
+  data_for_analysis$S1602m4
   
 # housing tenure
-working_sac_city_acs$housing_tenure_total_B25003e1 <- 
-  working_sac_city_acs$B25003e1
-working_sac_city_acs$housing_tenure_total_margin_B25003m1 <- 
-  working_sac_city_acs$B25003m1
+data_for_analysis$housing_tenure_total_B25003e1 <- 
+  data_for_analysis$B25003e1
+data_for_analysis$housing_tenure_total_margin_B25003m1 <- 
+  data_for_analysis$B25003m1
 
-working_sac_city_acs$owner_occupy_number_B25003e2 <- 
-  working_sac_city_acs$B25003e2
-working_sac_city_acs$owner_occupy_margin_B25003m2 <- 
-  working_sac_city_acs$B25003m2
+data_for_analysis$owner_occupy_number_B25003e2 <- 
+  data_for_analysis$B25003e2
+data_for_analysis$owner_occupy_margin_B25003m2 <- 
+  data_for_analysis$B25003m2
 
-working_sac_city_acs$renter_occupy_number_B25003e3 <- 
-  working_sac_city_acs$B25003e3
-working_sac_city_acs$renter_occupy_margin_B25003m3 <- 
-  working_sac_city_acs$B25003m3
+data_for_analysis$renter_occupy_number_B25003e3 <- 
+  data_for_analysis$B25003e3
+data_for_analysis$renter_occupy_margin_B25003m3 <- 
+  data_for_analysis$B25003m3
   
-working_sac_city_acs$owner_occupy_percent_B25003 <- 
-  working_sac_city_acs$owner_occupy_number_B25003e2/
-  working_sac_city_acs$housing_tenure_total_B25003e1
+data_for_analysis$owner_occupy_percent_B25003 <- 
+  data_for_analysis$owner_occupy_number_B25003e2/
+  data_for_analysis$housing_tenure_total_B25003e1
 
-working_sac_city_acs$renter_occupy_percent_B25003 <- 
-  working_sac_city_acs$renter_occupy_number_B25003e3/
-  working_sac_city_acs$housing_tenure_total_B25003e1
+data_for_analysis$renter_occupy_percent_B25003 <- 
+  data_for_analysis$renter_occupy_number_B25003e3/
+  data_for_analysis$housing_tenure_total_B25003e1
 
 # median household income
-working_sac_city_acs$median_household_income_B19013e1 <- 
-  working_sac_city_acs$B19013e1
-working_sac_city_acs$median_household_income_margin_B19013m1 <- 
-  working_sac_city_acs$B19013m1
+data_for_analysis$median_household_income_B19013e1 <- 
+  data_for_analysis$B19013e1
+data_for_analysis$median_household_income_margin_B19013m1 <- 
+  data_for_analysis$B19013m1
 
 # median household value
-working_sac_city_acs$median_household_value_B25077e1 <- 
-  working_sac_city_acs$B25077e1
-working_sac_city_acs$median_household_value_margin_B25077m1 <- 
-  working_sac_city_acs$B25077m1
+data_for_analysis$median_household_value_B25077e1 <- 
+  data_for_analysis$B25077e1
+data_for_analysis$median_household_value_margin_B25077m1 <- 
+  data_for_analysis$B25077m1
 
 # age below 5
-working_sac_city_acs$age_total_B01001e1 <- 
-  working_sac_city_acs$B01001e1
-working_sac_city_acs$age_total_margin_B010001m1 <- 
-  working_sac_city_acs$B01001m1
+data_for_analysis$age_total_B01001e1 <- 
+  data_for_analysis$B01001e1
+data_for_analysis$age_total_margin_B010001m1 <- 
+  data_for_analysis$B01001m1
 
-working_sac_city_acs$age_below_5_number_B01001e3e27 <- 
-  (working_sac_city_acs$B01001e3 + 
-  working_sac_city_acs$B01001e27)
+data_for_analysis$age_below_5_number_B01001e3e27 <- 
+  (data_for_analysis$B01001e3 + 
+  data_for_analysis$B01001e27)
 
-working_sac_city_acs$age_over_5_number_B01001 <- 
-  (working_sac_city_acs$B01001e4 + 
-     working_sac_city_acs$B01001e5 + 
-     working_sac_city_acs$B01001e6 + 
-     working_sac_city_acs$B01001e7 + 
-     working_sac_city_acs$B01001e8 + 
-     working_sac_city_acs$B01001e9 + 
-     working_sac_city_acs$B01001e10 + 
-     working_sac_city_acs$B01001e11 + 
-     working_sac_city_acs$B01001e12 + 
-     working_sac_city_acs$B01001e13 + 
-     working_sac_city_acs$B01001e14 + 
-     working_sac_city_acs$B01001e15 + 
-     working_sac_city_acs$B01001e16 + 
-     working_sac_city_acs$B01001e17 + 
-     working_sac_city_acs$B01001e18 + 
-     working_sac_city_acs$B01001e19 + 
-     working_sac_city_acs$B01001e20 + 
-     working_sac_city_acs$B01001e21 + 
-     working_sac_city_acs$B01001e22 + 
-     working_sac_city_acs$B01001e23 + 
-     working_sac_city_acs$B01001e24 + 
-     working_sac_city_acs$B01001e25 +
-     working_sac_city_acs$B01001e28 + 
-     working_sac_city_acs$B01001e29 + 
-     working_sac_city_acs$B01001e30 + 
-     working_sac_city_acs$B01001e31 + 
-     working_sac_city_acs$B01001e32 + 
-     working_sac_city_acs$B01001e33 + 
-     working_sac_city_acs$B01001e34 + 
-     working_sac_city_acs$B01001e35 + 
-     working_sac_city_acs$B01001e36 + 
-     working_sac_city_acs$B01001e37 + 
-     working_sac_city_acs$B01001e38 + 
-     working_sac_city_acs$B01001e39 + 
-     working_sac_city_acs$B01001e40 + 
-     working_sac_city_acs$B01001e41 + 
-     working_sac_city_acs$B01001e42 + 
-     working_sac_city_acs$B01001e43 + 
-     working_sac_city_acs$B01001e44 + 
-     working_sac_city_acs$B01001e45 + 
-     working_sac_city_acs$B01001e46 + 
-     working_sac_city_acs$B01001e47 + 
-     working_sac_city_acs$B01001e48 + 
-     working_sac_city_acs$B01001e49)
+data_for_analysis$age_over_5_number_B01001 <- 
+  (data_for_analysis$B01001e4 + 
+     data_for_analysis$B01001e5 + 
+     data_for_analysis$B01001e6 + 
+     data_for_analysis$B01001e7 + 
+     data_for_analysis$B01001e8 + 
+     data_for_analysis$B01001e9 + 
+     data_for_analysis$B01001e10 + 
+     data_for_analysis$B01001e11 + 
+     data_for_analysis$B01001e12 + 
+     data_for_analysis$B01001e13 + 
+     data_for_analysis$B01001e14 + 
+     data_for_analysis$B01001e15 + 
+     data_for_analysis$B01001e16 + 
+     data_for_analysis$B01001e17 + 
+     data_for_analysis$B01001e18 + 
+     data_for_analysis$B01001e19 + 
+     data_for_analysis$B01001e20 + 
+     data_for_analysis$B01001e21 + 
+     data_for_analysis$B01001e22 + 
+     data_for_analysis$B01001e23 + 
+     data_for_analysis$B01001e24 + 
+     data_for_analysis$B01001e25 +
+     data_for_analysis$B01001e28 + 
+     data_for_analysis$B01001e29 + 
+     data_for_analysis$B01001e30 + 
+     data_for_analysis$B01001e31 + 
+     data_for_analysis$B01001e32 + 
+     data_for_analysis$B01001e33 + 
+     data_for_analysis$B01001e34 + 
+     data_for_analysis$B01001e35 + 
+     data_for_analysis$B01001e36 + 
+     data_for_analysis$B01001e37 + 
+     data_for_analysis$B01001e38 + 
+     data_for_analysis$B01001e39 + 
+     data_for_analysis$B01001e40 + 
+     data_for_analysis$B01001e41 + 
+     data_for_analysis$B01001e42 + 
+     data_for_analysis$B01001e43 + 
+     data_for_analysis$B01001e44 + 
+     data_for_analysis$B01001e45 + 
+     data_for_analysis$B01001e46 + 
+     data_for_analysis$B01001e47 + 
+     data_for_analysis$B01001e48 + 
+     data_for_analysis$B01001e49)
 
-working_sac_city_acs$age_under_5_percent_B01001 <- 
-  working_sac_city_acs$age_below_5_number_B01001e3e27/
-  working_sac_city_acs$age_total_B01001e1
+data_for_analysis$age_under_5_percent_B01001 <- 
+  data_for_analysis$age_below_5_number_B01001e3e27/
+  data_for_analysis$age_total_B01001e1
+
+
+
+#### national data ####
+
+#### aian ####
+aian_data_sac_alone <- 
+  fread(file = "data_for_race_tables_raw_ish/data_for_race_tables/aian_data_for_r_sac_alone.csv")
+
+aian_data_sac_alone$Nation_or_Tribe <- 
+  factor(aian_data_sac_alone$Nation_or_Tribe)
+
+aian_data_sac_alone$AIorAN <- 
+  ifelse(aian_data_sac_alone$Nation_or_Tribe %in% 
+           c("Alaskan Athabascan",
+             "Aleut",
+             "Inupiat",
+             "Tlingit-Haida",
+             "Tsimshian",
+             "Yup'ik",
+             "Alaska Native, no nation or tribe specified"), 
+         "Alaska Native", 
+         ifelse(aian_data_sac_alone$Nation_or_Tribe %in% 
+                  c("Native American or Alaska Native, no nation or tribe specified"), 
+                "", 
+                "Native American"))
+
+aian_data_sac_alone$AIorAN <- 
+  factor(aian_data_sac_alone$AIorAN, 
+         levels = c("Native American", 
+                    "Alaska Native", 
+                    ""))
+
+ggplot(aian_data_sac_alone, 
+       aes(x=fct_inorder(Nation_or_Tribe), y=Number)) + 
+  geom_bar(position=position_dodge(), 
+           stat="identity", colour='black', 
+           fill = "green") +
+  geom_errorbar(aes(
+    ymin = Number - Raw_Error, 
+    ymax = Number + Raw_Error), 
+    width=.2, 
+    position = position_dodge(.9)
+  ) + 
+  geom_text(aes(label=comma(Number), 
+                y = Number + Raw_Error + 150), 
+            vjust=1, 
+            hjust = 0.5, 
+            family = "serif") +
+  labs(x = paste(expression("First Nation or tribal identification among those classified as Native American, American Indian, or Alaska Native alone or in any combination in the American Community Survey 2013–2017 five-year estimates (Table B02017) (",italic("n "),"= 10,738 +/- 1,118)")), y = "Number (margin of error)") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.text.x = element_text(angle = 90, 
+                                   hjust = 1, 
+                                   vjust = 0.5), 
+        text = element_text (size = 14, 
+                             family = "serif"), 
+        axis.title.x = element_text(margin=margin(30,0,0,0))) + 
+  facet_grid(~AIorAN, space="free", scales="free")
+
+
+
+#### nhopi subgroups ####
+
+nhopi_data_sac_alone <- 
+  fread(file = "data_for_race_tables_raw_ish/data_for_race_tables/nhopi_data_for_r_sac_alone.csv")
+
+nhopi_data_sac_alone$Group <- 
+  factor(nhopi_data_sac_alone$Group, 
+         levels = c("Melanesian", 
+                    "Micronesian", 
+                    "Polynesian", 
+                    ""))
+
+ggplot(nhopi_data_sac_alone, 
+       aes(x=fct_inorder(Nationality), 
+           y=Number)) + 
+  geom_bar(position=position_dodge(), 
+           stat="identity", 
+           colour='black', 
+           fill = "green") +
+  geom_errorbar(aes(
+    ymin = Number - Raw_Error, 
+    ymax = Number + Raw_Error), 
+    width=.2, 
+    position = position_dodge(.9)
+  ) + 
+  geom_text(aes(label=comma(Number), 
+                y = Number + Raw_Error + 250), 
+            vjust=1, 
+            hjust = 0.5, 
+            family = "serif") +
+  labs(x = expression(paste("National origin of those classified as Native Hawaiian or Other Pacific Islander alone or in any combination in the American Community Survey 2013–2017 five-year estimates (Table B02019) (", italic("n ")," = 12,560) (",italic("n "),"of nationalities = 12,560 +/- 1,360)")), y = "Number (margin of error)") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.text.x = element_text(angle = 90, 
+                                   hjust = 1, 
+                                   vjust = 0.5), 
+        text = element_text (size = 14, 
+                             family = "serif"), 
+        axis.title.x = element_text(margin=margin(30,0,0,0))) + 
+  facet_grid(~Group, space="free", scales="free")
+
+
+
+#### asian subgroups ####
+asian_bar_graph_data <- 
+  fread(file = 
+          "data_for_race_tables_raw_ish/data_for_race_tables/
+        asian_data_for_r.csv")
+
+
+ggplot(asian_bar_graph_data, 
+       aes(x=as.factor(Nationality), y=Percent, fill=Geography)) + 
+  geom_bar(position=position_dodge(), stat="identity", colour='black') +
+  geom_errorbar(aes(
+    ymin = Percent - Percentage_Error, 
+    ymax = Percent + Percentage_Error), 
+    width=.2, 
+    position = position_dodge(.9)
+    ) + 
+  labs(x = expression(paste("Percentage and standard error of nationalities among those classified as Asian alone or in any combination in the American Community Survey 2013–2017 five-year estimates (Table B02018) (",italic("n "),"of nationalities = 108,676 +/- 2,222)")), 
+       y = "Number (margin of error)") + 
+  scale_fill_manual(values = c("Sacramento" = "green", "United States" = "purple")) +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), 
+        text = element_text (size = 14, family = "serif"), 
+        axis.title.x = element_text(margin=margin(15,0,0,0)))
+
+asian_data_sac_alone <- 
+  fread(file = "data_for_race_tables_raw_ish/data_for_race_tables/asian_data_for_r_sac_alone.csv")
+
+asian_data_sac_alone$Nationality <- 
+  factor(asian_data_sac_alone$Nationality)
+
+ggplot(asian_data_sac_alone, 
+       aes(x=fct_inorder(Nationality), y=Number)) + 
+  geom_bar(position=position_dodge(), stat="identity", colour='black', fill = "green") +
+  geom_errorbar(aes(
+    ymin = Number - Raw_Error, 
+    ymax = Number + Raw_Error), 
+    width=.2, 
+    position = position_dodge(.9)
+  ) + 
+  geom_text(aes(label=comma(Number), y = Number + 2500), vjust=1, hjust = 0.5, family = "serif") +
+  labs(x = paste(expression("National origin of those classified as Asian alone or in any combination in the American Community Survey 2013–2017 five-year estimates (Table B02018) (",italic("n "),"= 108,676 +/- 2,222)")), y = "Number (margin of error)") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), 
+        text = element_text (size = 14, family = "serif"), 
+        axis.title.x = element_text(margin=margin(15,0,0,0)), 
+        axis.title.y = element_text (size = 14, family = "serif"))
+
+
+
+#### hispanic latino groups ####
+latino_data_sac_alone <- 
+  fread(file = "data_for_race_tables_raw_ish/data_for_race_tables/latino_hispanic_for_r_sac_alone.csv")
+
+latino_data_sac_alone$Group <- 
+  factor(latino_data_sac_alone$Group, 
+         levels = c("", 
+                    "Central American", 
+                    "South American", 
+                    "Other Hispanic or Latino"))
+
+ggplot(latino_data_sac_alone, 
+       aes(x=fct_inorder(Ethnicity), 
+           y=Number)) + 
+  geom_bar(position=position_dodge(), 
+           stat="identity", 
+           colour='black', 
+           fill = "green") +
+  geom_errorbar(aes(
+    ymin = Number - Raw_Error, 
+    ymax = Number + Raw_Error), 
+    width=.2, 
+    position = position_dodge(.9)
+  ) + 
+  geom_text(aes(label=comma(Number), 
+                y = Number + Raw_Error + 4000), 
+            vjust=1, 
+            hjust = 0.5, 
+            family = "serif") +
+  labs(x = paste(expression("National origin of those classified as Hispanic or Latino alone or in any combination in the American Community Survey 2013–2017 five-year estimates (Table B03001)",italic("n "),"= 489,650 +/- 100)")), y = "Number (margin of error)") +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.text.x = element_text(angle = 90, 
+                                   hjust = 1, 
+                                   vjust = 0.5), 
+        text = element_text (size = 14, 
+                             family = "serif"), 
+        axis.title.x = element_text(margin=margin(30,0,0,0))) + 
+  facet_grid(~Group, space="free", scales="free")
+
+
+
 
 #### correlation analysis ####
-working_sac_city_acs$GEOID
+data_for_analysis$GEOID
+
+
+
+#### graph race/ethnicity ####
+
+
+
+#### graph Hispanic/Latinx subgroups
+
+
+#### graph
+
