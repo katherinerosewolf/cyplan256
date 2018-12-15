@@ -105,7 +105,7 @@ data_for_analysis$total_population_B01001e1 <-
   data_for_analysis$B01001e1
 
 # population density
-data_for_analysis$population_density_B01001_ALAND <- 
+data_for_analysis$pop_density_B01001_ALAND <- 
   (1000000*
      data_for_analysis$total_population_B01001e1/
      data_for_analysis$ALAND.x)
@@ -121,7 +121,7 @@ data_for_analysis$white_number_B02008e1 <-
   data_for_analysis$B02008e1
 data_for_analysis$white_margin_B02008m1 <- 
   data_for_analysis$B02008e1
-data_for_analysis$white_percent <- 
+data_for_analysis$white_percent_B02008e1 <- 
   data_for_analysis$white_number_B02008e1/data_for_analysis$total_for_race_B02001e1
 
 # nhopi
@@ -129,7 +129,7 @@ data_for_analysis$nhopi_number_B02012e1 <-
   data_for_analysis$B02012e1 
 data_for_analysis$nhopi_margin_B02012m1 <- 
   data_for_analysis$B02012m1
-data_for_analysis$nhopi_percent <- 
+data_for_analysis$nhopi_percent_B02012e1 <- 
   data_for_analysis$nhopi_number_B02012e1/
   data_for_analysis$total_for_race_B02001e1
   
@@ -138,7 +138,7 @@ data_for_analysis$aian_number_B02010e1 <-
   data_for_analysis$B02010e1 
 data_for_analysis$aian_margin_B02010m1 <- 
   data_for_analysis$B02010m1
-data_for_analysis$aian_percent <- 
+data_for_analysis$aian_percent_B02010e1 <- 
   data_for_analysis$aian_number_B02010e1/
   data_for_analysis$total_for_race_B02001e1
 
@@ -156,7 +156,7 @@ data_for_analysis$black_number_B02009e1 <-
   data_for_analysis$B02009e1 
 data_for_analysis$black_margin_B02009m1 <- 
   data_for_analysis$B02009m1
-data_for_analysis$black_percent <- 
+data_for_analysis$black_percent_B02009e1 <- 
   data_for_analysis$black_number_B02009e1/
   data_for_analysis$total_for_race_B02001e1
 
@@ -179,6 +179,78 @@ data_for_analysis$not_hisp_lat_margin_B03003m2 <-
 data_for_analysis$hisp_lat_percent_B03003 <- 
   data_for_analysis$hisp_lat_number_B03003e3/
   data_for_analysis$total_for_ethnicity_B03003e1
+
+# indian (asian)
+data_for_analysis$indian_number_B02018e2 <-
+  data_for_analysis$B02018e2 
+data_for_analysis$indian_margin_B02018m2 <- 
+  data_for_analysis$B02018m2
+data_for_analysis$indian_percent_B02018e2 <- 
+  data_for_analysis$indian_number_B02018e2/
+  data_for_analysis$total_for_race_B02001e1
+
+# chinese
+data_for_analysis$chinese_number_B02018e7 <-
+  data_for_analysis$B02018e7 
+data_for_analysis$chinese_margin_B02018m7 <- 
+  data_for_analysis$B02018m7
+data_for_analysis$chinese_percent_B02018e7 <- 
+  data_for_analysis$chinese_number_B02018e7/
+  data_for_analysis$total_for_race_B02001e1
+
+# filipino
+data_for_analysis$filipino_number_B02018e8 <-
+  data_for_analysis$B02018e8 
+data_for_analysis$filipino_margin_B02018m8 <- 
+  data_for_analysis$B02018m8
+data_for_analysis$filipino_percent_B02018e8 <- 
+  data_for_analysis$filipino_number_B02018e8/
+  data_for_analysis$total_for_race_B02001e1
+
+# hmong
+data_for_analysis$hmong_number_B02018e9 <-
+  data_for_analysis$B02018e9 
+data_for_analysis$hmong_margin_B02018m9 <- 
+  data_for_analysis$B02018m9
+data_for_analysis$hmong_percent_B02018e9 <- 
+  data_for_analysis$hmong_number_B02018e9/
+  data_for_analysis$total_for_race_B02001e1
+
+# japanese
+data_for_analysis$japanese_number_B02018e11 <-
+  data_for_analysis$B02018e11 
+data_for_analysis$japanese_margin_B02018m11 <- 
+  data_for_analysis$B02018m11
+data_for_analysis$japanese_percent_B02018e11 <- 
+  data_for_analysis$japanese_number_B02018e11/
+  data_for_analysis$total_for_race_B02001e1
+
+# laotian
+data_for_analysis$laotian_number_B02018e13 <-
+  data_for_analysis$B02018e13 
+data_for_analysis$laotian_margin_B02018m13 <- 
+  data_for_analysis$B02018m13 
+data_for_analysis$laotian_percent_B02018e13 <- 
+  data_for_analysis$laotian_number_B02018e13/
+  data_for_analysis$total_for_race_B02001e1
+
+# vietnamese
+data_for_analysis$vietnamese_number_B02018e22 <-
+  data_for_analysis$B02018e22 
+data_for_analysis$vietnamese_margin_B02018m22 <- 
+  data_for_analysis$B02018m22
+data_for_analysis$vietnamese_percent_B02018e22 <- 
+  data_for_analysis$vietnamese_number_B02018e22/
+  data_for_analysis$total_for_race_B02001e1
+
+# mexican
+data_for_analysis$mexican_number_B03001e4 <-
+  data_for_analysis$B03001e4 
+data_for_analysis$mexican_margin_B03001m4 <- 
+  data_for_analysis$B03001m4
+data_for_analysis$mexican_percent_B03001e4 <- 
+  data_for_analysis$mexican_number_B03001e4/
+  data_for_analysis$total_for_race_B02001e1
 
 # % below poverty
 data_for_analysis$poverty_total_B17001e1 <- 
@@ -381,7 +453,7 @@ data_quick_analysis$total_population_B01001e1 <-
   data_for_analysis$B01001e1
 
 # population density
-data_quick_analysis$population_density_B01001_ALAND <- 
+data_quick_analysis$pop_density_B01001_ALAND <- 
   (1000000*
      data_for_analysis$total_population_B01001e1/
      data_for_analysis$ALAND.x)
@@ -397,7 +469,7 @@ data_quick_analysis$white_number_B02008e1 <-
   data_for_analysis$B02008e1
 data_quick_analysis$white_margin_B02008m1 <- 
   data_for_analysis$B02008e1
-data_quick_analysis$white_percent <- 
+data_quick_analysis$white_percent_B02008e1 <- 
   data_for_analysis$white_number_B02008e1/
   data_for_analysis$total_for_race_B02001e1
 
@@ -406,7 +478,7 @@ data_quick_analysis$nhopi_number_B02012e1 <-
   data_for_analysis$B02012e1 
 data_quick_analysis$nhopi_margin_B02012m1 <- 
   data_for_analysis$B02012m1
-data_quick_analysis$nhopi_percent <- 
+data_quick_analysis$nhopi_percent_B02012e1 <- 
   data_for_analysis$nhopi_number_B02012e1/
   data_for_analysis$total_for_race_B02001e1
 
@@ -415,7 +487,7 @@ data_quick_analysis$aian_number_B02010e1 <-
   data_for_analysis$B02010e1 
 data_quick_analysis$aian_margin_B02010m1 <- 
   data_for_analysis$B02010m1
-data_quick_analysis$aian_percent <- 
+data_quick_analysis$aian_percent_B02010e1 <- 
   data_for_analysis$aian_number_B02010e1/
   data_for_analysis$total_for_race_B02001e1
 
@@ -433,7 +505,7 @@ data_quick_analysis$black_number_B02009e1 <-
   data_for_analysis$B02009e1 
 data_quick_analysis$black_margin_B02009m1 <- 
   data_for_analysis$B02009m1
-data_quick_analysis$black_percent <- 
+data_quick_analysis$black_percent_B02009e1 <- 
   data_for_analysis$black_number_B02009e1/
   data_for_analysis$total_for_race_B02001e1
 
@@ -656,18 +728,45 @@ data_quick_analysis$mean_tree_canopy <- data_quick_analysis$MEAN
 
 data_quick_analysis$city_tree_count <- data_quick_analysis$Count_
 
+data_quick_analysis$city_trees_per_capita <- 
+  data_quick_analysis$city_tree_count/
+  data_quick_analysis$total_population_B01001e1
+
+data_quick_analysis$city_tree_density <- 
+  1000000*
+  data_quick_analysis$city_tree_count/
+  data_quick_analysis$ALAND
+
 data_quick_analysis$median_household_value_B25077e1 <- as.numeric(data_quick_analysis$median_household_value_B25077e1)
+
+#### add 500 Cities data ####
+arcgis_500_cities_export <- 
+  fread("arcgis_500_cities_export.txt", 
+        colClasses = 
+          list(character = 'GEOID_TEXT_500_CITIES'))
+
+arcgis_500_cities_export$GEOID <- arcgis_500_cities_export$GEOID_TEXT_500_CITIES
+
+data_quick_analysis <- 
+  merge(x = data_quick_analysis, 
+        y = arcgis_500_cities_export, 
+        by = "GEOID", 
+        all.x = TRUE)
+
+write.csv(data_quick_analysis, file ="data_quick_analysis.csv")
+
+
 
 #### correlation analyses ####
 
 names(data_quick_analysis)
 # make dataframe for the correlation dataset
-correlation_matrix_data  <-  data_quick_analysis[,c("population_density_B01001_ALAND","median_household_income_B19013e1","median_household_value_B25077e1","white_percent","nhopi_percent","aian_percent","asian_percent","black_percent","hisp_lat_percent_B03003","completed_high_school_percent_B15003","median_age_B01002e2", "poverty_below_percent_B17001","unemployment_rate_S2301e4","ling_iso_percent_S1602e4","renter_occupy_percent_B25003","age_under_5_percent_B01001","mean_tree_canopy","city_tree_count","life_expect")]
+correlation_matrix_data  <-  data_quick_analysis[,c("pop_density_B01001_ALAND","median_household_income_B19013e1","median_household_value_B25077e1","white_percent_B02008e1","nhopi_percent_B02012e1","aian_percent_B02010e1","asian_percent","black_percent_B02009e1","hisp_lat_percent_B03003","completed_high_school_percent_B15003","median_age_B01002e2", "poverty_below_percent_B17001","unemployment_rate_S2301e4","ling_iso_percent_S1602e4","renter_occupy_percent_B25003","age_under_5_percent_B01001","mean_tree_canopy","city_tree_density","city_trees_per_capita","life_expect","MHLTH_CrudePrev","PHLTH_CrudePrev","BPHIGH_CrudePrev","CASTHMA_CrudePrev","DIABETES_CrudePrev","CANCER_CrudePrev")]
 
 View(correlation_matrix_data)
 
 # create the correlation matrix
-cormat  <-  round(cor(correlation_matrix_data[,1:19], use = "pairwise.complete.obs"),2) # rounds to 2 decimal places
+cormat  <-  round(cor(correlation_matrix_data[,1:25], use = "pairwise.complete.obs"),2) # rounds to 2 decimal places
 
 # view and write to file
 View(cormat)
@@ -699,7 +798,7 @@ library(reshape2)
 melted_cormat <- melt(upper_tri, na.rm = TRUE)
 # Heatmap
 library(ggplot2)
-ggplot(data = melted_cormat, aes(Var2, Var1, fill = value))+
+ggheatmap <- ggplot(data = melted_cormat, aes(Var2, Var1, fill = value))+
   geom_tile(color = "white")+
   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
                        midpoint = 0, limit = c(-1,1), space = "Lab", 
@@ -716,23 +815,23 @@ reorder_cormat <- function(cormat){
   cormat <-cormat[hc$order, hc$order]
 }
 
-# Reorder the correlation matrix
-cormat <- reorder_cormat(cormat)
-upper_tri <- get_upper_tri(cormat)
-# Melt the correlation matrix
-melted_cormat <- melt(upper_tri, na.rm = TRUE)
-# Create a ggheatmap
-ggheatmap <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
-  geom_tile(color = "white")+
-  scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
-                       midpoint = 0, limit = c(-1,1), space = "Lab", 
-                       name="Pearson\nCorrelation") +
-  theme_minimal()+ # minimal theme
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, 
-                                   size = 12, hjust = 1))+
-  coord_fixed()
-# Print the heatmap
-print(ggheatmap)
+# # Reorder the correlation matrix
+# cormat <- reorder_cormat(cormat)
+# upper_tri <- get_upper_tri(cormat)
+# # Melt the correlation matrix
+# melted_cormat <- melt(upper_tri, na.rm = TRUE)
+# # Create a ggheatmap
+# ggheatmap <- ggplot(melted_cormat, aes(Var2, Var1, fill = value))+
+#   geom_tile(color = "white")+
+#   scale_fill_gradient2(low = "blue", high = "red", mid = "white", 
+#                        midpoint = 0, limit = c(-1,1), space = "Lab", 
+#                        name="Pearson\nCorrelation") +
+#   theme_minimal()+ # minimal theme
+#   theme(axis.text.x = element_text(angle = 45, vjust = 1, 
+#                                    size = 12, hjust = 1))+
+#   coord_fixed()
+# # Print the heatmap
+# print(ggheatmap)
 
 ggheatmap + 
   geom_text(aes(Var2, Var1, label = value), color = "black", size = 4) +
@@ -766,7 +865,12 @@ ggheatmap +
 
 print(ggheatmap)
 
-life_expec <- 
+poisson_model <- glm(formula = city_tree_count ~ "pop_density_B01001_ALAND","median_household_income_B19013e1","median_household_value_B25077e1","white_percent_B02008e1","nhopi_percent_B02012e1","aian_percent_B02010e1","asian_percent","black_percent_B02009e1","hisp_lat_percent_B03003","completed_high_school_percent_B15003","median_age_B01002e2", "poverty_below_percent_B17001","unemployment_rate_S2301e4","ling_iso_percent_S1602e4","renter_occupy_percent_B25003","age_under_5_percent_B01001","mean_tree_canopy","city_tree_count","life_expect","MHLTH_CrudePrev","PHLTH_CrudePrev","BPHIGH_CrudePrev","CASTHMA_CrudePrev","DIABETES_CrudePrev","CANCER_CrudePrev", family = "poisson", data = data_quick_analysis)
+
+
+c("pop_density_B01001_ALAND","median_household_income_B19013e1","median_household_value_B25077e1","white_percent_B02008e1","nhopi_percent_B02012e1","aian_percent_B02010e1","asian_percent","black_percent_B02009e1","hisp_lat_percent_B03003","completed_high_school_percent_B15003","median_age_B01002e2", "poverty_below_percent_B17001","unemployment_rate_S2301e4","ling_iso_percent_S1602e4","renter_occupy_percent_B25003","age_under_5_percent_B01001","mean_tree_canopy","city_tree_count","life_expect","MHLTH_CrudePrev","PHLTH_CrudePrev","BPHIGH_CrudePrev","CASTHMA_CrudePrev","DIABETES_CrudePrev","CANCER_CrudePrev") 
+
+
 
 #### national data ####
 
@@ -814,7 +918,7 @@ ggplot(aian_data_sac_alone,
             vjust=1, 
             hjust = 0.5, 
             family = "serif") +
-  labs(x = paste(expression("First Nation or tribal identification among those classified as Native American, American Indian, or Alaska Native alone or in any combination in the American Community Survey 2013–2017 five-year estimates (Table B02017) (",italic("n "),"= 10,738 +/- 1,118)")), y = "Number (margin of error)") +
+  labs(x = expression(paste("First Nation or tribal identification among those classified as Native American, American Indian, or Alaska Native alone or in any combination in the American Community Survey 2013–2017 five-year estimates (Table B02017) (",italic("n "),"= 10,738 +/- 1,118)")), y = "Number (margin of error)") +
   theme_bw() + 
   theme(panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
@@ -917,7 +1021,7 @@ ggplot(asian_data_sac_alone,
     position = position_dodge(.9)
   ) + 
   geom_text(aes(label=comma(Number), y = Number + 2500), vjust=1, hjust = 0.5, family = "serif") +
-  labs(x = paste(expression("National origin of those classified as Asian alone or in any combination in the American Community Survey 2013–2017 five-year estimates (Table B02018) (",italic("n "),"= 108,676 +/- 2,222)")), y = "Number (margin of error)") +
+  labs(x = expression(paste("National origin of those classified as Asian alone or in any combination in the American Community Survey 2013–2017 five-year estimates (Table B02018) (",italic("n "),"= 108,676 +/- 2,222)")), y = "Number (margin of error)") +
   theme_bw() + 
   theme(panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
@@ -927,7 +1031,7 @@ ggplot(asian_data_sac_alone,
         axis.title.x = element_text(margin=margin(15,0,0,0)), 
         axis.title.y = element_text (size = 14, family = "serif"))
 
-
+options(scipen=999)
 
 #### hispanic latino groups ####
 latino_data_sac_alone <- 
@@ -973,7 +1077,28 @@ ggplot(latino_data_sac_alone,
 
 
 
+#### DP05 tables ####
+national_versus_sac_big_groups <- 
+  fread(file = 
+          "sac_national_race_table_for_graphing.csv")
 
-
-
-
+ggplot(national_versus_sac_big_groups, 
+       aes(x=as.factor(Group), y=Percent, fill=Geography)) + 
+  geom_bar(position=position_dodge(), stat="identity", colour='black') +
+  geom_errorbar(aes(
+    ymin = Percent - Percent_Error, 
+    ymax = Percent + Percent_Error), 
+    width=.2, 
+    position = position_dodge(.9)
+  ) + 
+  labs(x = "Primary race and ethnicity classification in the American Community Survey 2013–2017 five-year estimates (Table DP05)", 
+       y = "Percentage (margin of error)") + 
+  scale_fill_manual(values = c("Sacramento" = "green", "United States" = "purple")) +
+  theme_bw() + 
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), 
+        text = element_text (size = 14, family = "serif"), 
+        axis.title.x = element_text(margin=margin(15,0,0,0))) +
+    facet_grid(~Hispanic_or_Latino, space="free", scales="free")
